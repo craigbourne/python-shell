@@ -14,8 +14,19 @@ class SimpleShell:
                 self.execute_command(user_input)
 
     def execute_command(self, command):
-        # This will handle different commands
-        pass
+        if command.lower() == "list":
+            self.list_directory()
+        else:
+            print(f"Unknown command: {command}")
+
+    def list_directory(self):
+        """List the contents of the current directory."""
+        try:
+            items = os.listdir()
+            for item in items:
+                print(item)
+        except Exception as e:
+            print(f"Error listing directory: {e}")
 
 if __name__ == "__main__":
     shell = SimpleShell()
