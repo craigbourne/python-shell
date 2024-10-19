@@ -3,8 +3,15 @@ import os
 class SimpleShell:
     def __init__(self):
         self.running = True
+        self.commands = {
+            "list": "List the contents of the current directory",
+            "add": "Add two numbers (Usage: ADD <number1> <number2>)",
+            "help": "Show this help message",
+            "exit": "Exit the shell"
+        }
 
     def run(self):
+        print("Welcome to SimpleShell! Type 'help' for a list of commands.")
         while self.running:
             user_input = input("SimpleShell> ").strip()
             if user_input.lower() == "exit":
@@ -14,13 +21,18 @@ class SimpleShell:
 
     def execute_command(self, command):
         parts = command.split()
-        if parts[0].lower() == "list":
+        if not parts:
+            return
+        cmd = parts[0].lower()
+        if cmd == "list":
             self.list_directory()
-        elif parts[0].lower() == "add":
+        elif cmd == "add":
             if len(parts) == 3:
                 self.add_numbers(parts[1], parts[2])
             else:
                 print("Usage: ADD <number1> <number2>")
+        elif cmd == "help":
+            self.show_help()
         else:
             print(f"Unknown command: {command}")
 
@@ -40,6 +52,12 @@ class SimpleShell:
             print(f"Result: {result}")
         except ValueError:
             print("Error: Please enter valid numbers.")
+
+    def show_help(self):
+        """Display the list of available commands."""
+        print("Available commands:")
+        for cmd, description in self.commands.items():
+            print(f"  {cmd.upper()}: {description}")
 
 if __name__ == "__main__":
     shell = SimpleShell()
