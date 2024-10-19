@@ -4,7 +4,9 @@ import re
 
 class SecureSimpleShell:
     def __init__(self):
+        # Initialise shell
         self.running = True
+        # Dictionary of available commands and their descriptions
         self.commands = {
             "list": "List the contents of the current directory",
             "add": "Add two numbers (Usage: ADD <number1> <number2>)",
@@ -13,17 +15,22 @@ class SecureSimpleShell:
         }
 
     def run(self):
+        # Main loop of shell
         print("Welcome to SecureSimpleShell! Type 'help' for a list of commands.")
         while self.running:
+            # Prompt user for input
             user_input = input("SecureSimpleShell> ").strip()
             if user_input.lower() == "exit":
+                # Exit shell if user types 'exit'
                 self.running = False
             else:
+                # Execute entered command
                 self.execute_command(user_input)
 
     def execute_command(self, command):
         # Sanitise input to prevent command injection
         sanitised_command = self.sanitise_input(command)
+        # Use shlex.split for secure tokenisation of the command
         parts = shlex.split(sanitised_command)
         
         if not parts:
@@ -33,6 +40,7 @@ class SecureSimpleShell:
         if cmd == "list":
             self.list_directory()
         elif cmd == "add":
+            # Validate numbers before attempting to add
             if len(parts) == 3 and self.validate_numbers(parts[1], parts[2]):
                 self.add_numbers(parts[1], parts[2])
             else:
@@ -43,11 +51,11 @@ class SecureSimpleShell:
             print(f"Unknown command: {cmd}")
 
     def sanitise_input(self, input_string):
-        # Remove any potentially dangerous characters
+        # Remove dangerous characters
         return re.sub(r'[;&|]', '', input_string)
 
     def validate_numbers(self, num1, num2):
-        # Ensure inputs are valid numbers
+        # Ensure inputs are valid numbers using regex
         return re.match(r'^-?\d+(\.\d+)?$', num1) and re.match(r'^-?\d+(\.\d+)?$', num2)
 
     def list_directory(self):
@@ -79,5 +87,6 @@ class SecureSimpleShell:
         return re.sub(r'[<>&]', '', output)  # Basic sanitisation for demonstration
 
 if __name__ == "__main__":
+    # Create and run the secure shell when the script is executed
     shell = SecureSimpleShell()
     shell.run()
